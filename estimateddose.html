@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Perkiraan Dosis Pasien menggunakan Javascript</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet" />
+
+    <!-- Libraries Stylesheet -->
+    <link href="lib/animate/animate.min.css" rel="stylesheet" />
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet" />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Template Stylesheet -->
+    <link href="css/style.css" rel="stylesheet" />
+
+    <!--Style untuk mempercantik tampilan tabel (opsional) 
+    <style>
+      table {
+        width: 50%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: center;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+    </style> -->
+  </head>
+  <body>
+    <h1 class="mb-1">Perkiraan Dosis Pasien (RU)</h1>
+    <h3>Silahkan masukkan data output (keluaran radiasi) yang diperoleh dari data Uji Kesesuaian</h3>
+    <form name="estdose" id="estdose">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th scope="col">No.</th>
+            <th scope="col">Tegangan Set (kV)</th>
+            <th scope="col">Output(uGy/mAs)</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <th scope="row">1</th>
+            <td>
+              <div class="col-md-3">
+                <input type="number" min="0" class="form-control" id="x1" name="x1" placeholder="50" />
+              </div>
+            </td>
+            <td>
+              <div class="col-md-3">
+                <input type="number" min="0" step=".01" class="form-control" id="y1" name="y1" placeholder="10.00" />
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">2</th>
+            <td>
+              <div class="col-md-3">
+                <input type="number" min="0" class="form-control" id="x2" name="x2" placeholder="60" />
+              </div>
+            </td>
+            <td>
+              <div class="col-md-3">
+                <input type="number" min="0" step=".01" class="form-control" id="y2" name="y2" placeholder="20.00" />
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td>
+              <div class="col-md-3">
+                <input type="number" min="0" class="form-control" id="x3" name="x3" placeholder="70" />
+              </div>
+            </td>
+            <td>
+              <div class="col-md-3">
+                <input type="number" min="0" step=".01" class="form-control" id="y3" name="y3" placeholder="30.00" />
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">4</th>
+            <td>
+              <div class="col-md-3">
+                <input type="number" min="0" class="form-control" id="x4" name="x4" placeholder="80" />
+              </div>
+            </td>
+            <td>
+              <div class="col-md-3">
+                <input type="number" min="0" step=".01" class="form-control" id="y4" name="y4" placeholder="40.00" />
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">5</th>
+            <td>
+              <div class="col-md-3">
+                <input type="number" min="0" class="form-control" id="x5" name="x5" placeholder="90" />
+              </div>
+            </td>
+            <td>
+              <div class="col-md-3">
+                <input type="number" min="0" step=".01" class="form-control" id="y5" name="y5" placeholder="50.00" />
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <h3>Sekarang silahkan masukkan parameter eksposi yang ingin dihitung dosisnya</h3>
+      <div class="input-group flex-nowrap">
+        <!-- masukkan nilai kV -->
+        <div class="col-md-1 mb-2">
+          <input type="number" min="0" class="form-control" id="v" name="v" placeholder="55" />
+        </div>
+        <span class="input-group-text" id="addon-wrapping"><small>kV</small></span>
+        <!-- masukkan nilai mAs -->
+        <div class="col-md-1">
+          <input type="number" min="0" step=".1" class="form-control" id="w" name="w" placeholder="4.5" />
+        </div>
+        <span class="input-group-text" id="addon-wrapping"><small>mAs</small></span>
+        <!-- Button -->
+      </div>
+      <div>
+        <button type="submit" id="calculate" class="btn btn-primary d-flex">Calculate</button>
+      </div>
+    </form>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("estdose");
+
+        form.addEventListener("submit", function (event) {
+          event.preventDefault(); // Prevent the form from submitting via the browser
+
+          // You can now access form data using form.elements
+          const pseudox1 = form.elements["x1"].value;
+          const pseudoy1 = form.elements["y1"].value;
+
+          const pseudox2 = form.elements["x2"].value;
+          const pseudoy2 = form.elements["y2"].value;
+
+          const pseudox3 = form.elements["x3"].value;
+          const pseudoy3 = form.elements["y3"].value;
+
+          const pseudox4 = form.elements["x4"].value;
+          const pseudoy4 = form.elements["y4"].value;
+
+          const pseudox5 = form.elements["x5"].value;
+          const pseudoy5 = form.elements["y5"].value;
+
+          const pseudov = form.elements["v"].value;
+          const pseudow = form.elements["w"].value;
+
+          // convert string to number
+          const realx1 = parseFloat(pseudox1);
+          const realy1 = parseFloat(pseudoy1);
+
+          const realx2 = parseFloat(pseudox2);
+          const realy2 = parseFloat(pseudoy2);
+
+          const realx3 = parseFloat(pseudox3);
+          const realy3 = parseFloat(pseudoy3);
+
+          const realx4 = parseFloat(pseudox4);
+          const realy4 = parseFloat(pseudoy4);
+
+          const realx5 = parseFloat(pseudox5);
+          const realy5 = parseFloat(pseudoy5);
+
+          const realv = parseFloat(pseudov);
+          const realw = parseFloat(pseudow);
+
+          const lnx1 = Math.log(realx1);
+          const lnx2 = Math.log(realx2);
+          const lnx3 = Math.log(realx3);
+          const lnx4 = Math.log(realx4);
+          const lnx5 = Math.log(realx5);
+
+          const lny1 = Math.log(realy1);
+          const lny2 = Math.log(realy2);
+          const lny3 = Math.log(realy3);
+          const lny4 = Math.log(realy4);
+          const lny5 = Math.log(realy5);
+
+          const bilangan1 = lnx1 + lnx2 + lnx3 + lnx4 + lnx5;
+          const bilangan2 = lny1 + lny2 + lny3 + lny4 + lny5;
+
+          //pengurang
+          const pengurang = 2 * bilangan1;
+
+          const a = (bilangan2 - pengurang) / 5;
+
+          const A = Math.exp(a);
+          const pangkat2 = Math.pow(realv, 2);
+          const y = A * pangkat2;
+
+          //menghitung dose
+          const dose = ((y * realw * 1.35) / 1000).toFixed(4);
+
+          // Here you can perform validation or other actions with the form data
+          // For example, you could log it to the console
+          //console.log("First Name:", pseudox1);
+          //console.log("Last Name:", pseudoy1);
+          //console.log("=", y);
+          //console.log("=", dose);
+          //console.log(typeof realx1);
+
+          document.getElementById("demo").innerHTML = "Perkiraan dosis untuk parameter eksposi" + " " + realv + " kV dan" + " " + realw + " mAs =" + " " + dose + " mGy";
+
+          // Alternatively, you can send the form data to a server via AJAX/fetch
+          // Example using fetch (assuming you have a server endpoint to handle the form data)
+        });
+      });
+    </script>
+    <h3 class="mt-2" id="demo"></h3>
+  </body>
+</html>
